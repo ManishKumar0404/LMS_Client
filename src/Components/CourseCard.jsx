@@ -15,7 +15,11 @@ function CourseCard({ data }) {
         if (data.thumbnail.secure_url) return data.thumbnail.secure_url;
         if (data.thumbnail.public_id) {
             // Construct Cloudinary URL if only public_id is available
-            return `https://res.cloudinary.com/${process.env.CLOUDINARY_CLOUD_NAME}/image/upload/${data.thumbnail.public_id}`;
+            const cloudName = import.meta.env.VITE_CLOUDINARY_CLOUD_NAME;
+            if (cloudName) {
+                return `https://res.cloudinary.com/${cloudName}/image/upload/${data.thumbnail.public_id}`;
+            }
+            return DEFAULT_THUMBNAIL;
         }
         if (typeof data.thumbnail === 'string') return data.thumbnail;
 

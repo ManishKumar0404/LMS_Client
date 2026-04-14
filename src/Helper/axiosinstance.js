@@ -1,13 +1,21 @@
 import axios from "axios";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.VITE_API_URL || "http://localhost:5000/api/v1",
+  baseURL: apiUrl || (import.meta.env.DEV ? "http://localhost:5000/api/v1" : ""),
   withCredentials: true,
   timeout: 60000, // Increase timeout to 60 seconds for file uploads
   headers: {
     'Content-Type': 'application/json'
   }
 });
+
+if (!apiUrl && !import.meta.env.DEV) {
+  console.warn(
+    "VITE_API_URL is not set. Production requests will fail until the frontend points to a public backend URL."
+  );
+}
 
 // Request interceptor
 axiosInstance.interceptors.request.use((config) => {
